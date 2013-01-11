@@ -1,0 +1,12 @@
+name: PlayerLocator
+main: com.vokal.locator.PlayerLocator
+version: 1.0
+description: Lalalaa
+
+commands:
+  fart:
+    description: Makes you fart
+    usage: /<command>
+  gob:
+    description: Runs the Gob program
+    usage: /<command>
