@@ -13,3 +13,6 @@ commands:
   gob:
     description: Runs the Gob program
     usage: /<command>
+  peep:
+    description: Peep show
+    usage: /<command>
