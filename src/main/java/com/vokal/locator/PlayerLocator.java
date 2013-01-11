@@ -11,6 +11,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.vokal.locator.command.*;
+import com.vokal.locator.event.*;
+
 public final class PlayerLocator extends JavaPlugin {
     public void updateLocations(Player[] aPlayers) {
         final JSONArray location_list = new JSONArray();

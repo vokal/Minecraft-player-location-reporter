@@ -1,10 +1,12 @@
-package com.vokal.locator;
+package com.vokal.locator.command;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
+
+import com.vokal.locator.PlayerLocator;
 
 public class GobCommandExecutor implements CommandExecutor {
     private PlayerLocator mPlugin; // pointer to your main class, unrequired if you don't need methods from the main class
