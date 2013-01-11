@@ -47,11 +47,11 @@ public final class PlayerLocator extends JavaPlugin {
         }
     };
 
-	@Override
-	public void onEnable() {
+    @Override
+    public void onEnable() {
         getCommand("gob").setExecutor(new GobCommandExecutor(this));
         getCommand("fart").setExecutor(new FartCommandExecutor(this));
-        
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, mUpdateLocations, 600L, 600L);
-	}
+
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, mUpdateLocations, 600L, 600L);
+    }
 }
