@@ -29,6 +29,15 @@ public class LocationsCommandExecutor implements CommandExecutor {
             return false;
         }
 
+        if (aSender instanceof Player) {
+            Player player = (Player) aSender;
+
+            if (!player.hasPermission("locator.moderator")) {
+                aSender.sendMessage("Not authorized to do that!");
+                return false;
+            }
+        }
+
         if (aArgs[0].equals("server")) {
             mPlugin.getConfig().set("server", aArgs[1]);
             mPlugin.getLogger().info("Setting server to: " + aArgs[1]);
