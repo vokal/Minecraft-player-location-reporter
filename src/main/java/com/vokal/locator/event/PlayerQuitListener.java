@@ -11,7 +11,7 @@ public class PlayerQuitListener implements Listener {
     private PlayerLocator mPlugin; // pointer to your main class, unrequired if you don't need methods from the main class
 
     public PlayerQuitListener(PlayerLocator aPlugin) {
-		mPlugin = aPlugin;
+        mPlugin = aPlugin;
     }
 
     @EventHandler
@@ -25,6 +25,6 @@ public class PlayerQuitListener implements Listener {
             mPlugin.getLogger().info("All players have quit, updating server");
             mPlugin.updateLocations(players);
         }
-    
+
     }
 }

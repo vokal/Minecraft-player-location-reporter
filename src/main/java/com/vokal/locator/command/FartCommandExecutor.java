@@ -10,13 +10,13 @@ import com.vokal.locator.PlayerLocator;
 
 public class FartCommandExecutor implements CommandExecutor {
     private PlayerLocator mPlugin; // pointer to your main class, unrequired if you don't need methods from the main class
- 
-	public FartCommandExecutor(PlayerLocator aPlugin) {
-		mPlugin = aPlugin;
-	}
- 
-	@Override
-	public boolean onCommand(CommandSender aSender, Command aCmd, String aLabel, String[] aArgs) {
+
+    public FartCommandExecutor(PlayerLocator aPlugin) {
+        mPlugin = aPlugin;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender aSender, Command aCmd, String aLabel, String[] aArgs) {
         if (!(aSender instanceof Player)) {
             aSender.sendMessage("This command can only be run by a player.");
             return false;
@@ -26,5 +26,5 @@ public class FartCommandExecutor implements CommandExecutor {
         mPlugin.getServer().broadcastMessage(ChatColor.DARK_RED + player.getDisplayName() + " farted!");
 
         return true;
-	}
+    }
 }

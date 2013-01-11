@@ -10,10 +10,10 @@ import com.vokal.locator.PlayerLocator;
 
 public class LocationsCommandExecutor implements CommandExecutor {
     private PlayerLocator mPlugin; // pointer to your main class, unrequired if you don't need methods from the main class
- 
-	public LocationsCommandExecutor(PlayerLocator aPlugin) {
-		mPlugin = aPlugin;
-	}
+
+    public LocationsCommandExecutor(PlayerLocator aPlugin) {
+        mPlugin = aPlugin;
+    }
 
     private void broadcastUpdated(CommandSender aSender) {
         String host = mPlugin.getConfig().getString("server");
@@ -21,9 +21,9 @@ public class LocationsCommandExecutor implements CommandExecutor {
 
         aSender.sendMessage(ChatColor.BLUE + "Server URL set to http://" + host + ":" + Integer.toString(port));
     }
- 
-	@Override
-	public boolean onCommand(CommandSender aSender, Command aCmd, String aLabel, String[] aArgs) {
+
+    @Override
+    public boolean onCommand(CommandSender aSender, Command aCmd, String aLabel, String[] aArgs) {
         if (aArgs.length != 2) {
             aSender.sendMessage("Not enough arguments!");
             return false;
@@ -46,5 +46,5 @@ public class LocationsCommandExecutor implements CommandExecutor {
         mPlugin.saveConfig();
 
         return true;
-	}
+    }
 }
