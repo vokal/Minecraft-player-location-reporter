@@ -12,6 +12,13 @@ public class LocationsCommandExecutor implements CommandExecutor {
 	public LocationsCommandExecutor(PlayerLocator aPlugin) {
 		mPlugin = aPlugin;
 	}
+
+    private void broadcastUpdated(CommandSender aSender) {
+        String host = mPlugin.getConfig().getString("server");
+        int port = mPlugin.getConfig().getInt("port");
+
+        aSender.sendMessage(ChatColor.BLUE + "Server URL set to http://" + host + ":" + Integer.toString(port));
+    }
  
 	@Override
 	public boolean onCommand(CommandSender aSender, Command aCmd, String aLabel, String[] aArgs) {
@@ -33,6 +40,7 @@ public class LocationsCommandExecutor implements CommandExecutor {
             }
         }
 
+        broadcastUpdated(aSender);
         mPlugin.saveConfig();
 
         return true;
