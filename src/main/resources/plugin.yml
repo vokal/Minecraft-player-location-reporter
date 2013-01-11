@@ -4,6 +4,9 @@ version: 1.0
 description: Lalalaa
 
 commands:
+  locations:
+    description: Administrate locations
+    usage: /<command> [server|port] value
   fart:
     description: Makes you fart
     usage: /<command>
