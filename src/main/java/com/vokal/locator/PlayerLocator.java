@@ -23,6 +23,7 @@ public final class PlayerLocator extends JavaPlugin {
             loc.put("x", player.getLocation().getX());
             loc.put("y", player.getLocation().getY());
             loc.put("z", player.getLocation().getZ());
+            loc.put("realm", player.getWorld().getEnvironment().toString());
             
             location_list.add(loc);
         }
