@@ -18,13 +18,6 @@ public class PlayerQuitListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent aEvent) {
         Player[] players = mPlugin.getServer().getOnlinePlayers();
 
-        // We always want to alert the server if the
-        // player list goes to 0. This way it clears
-        // it's list of active players.
-        if (players.length == 1) {
-            mPlugin.getLogger().info("All players have quit, updating server");
-            mPlugin.updateLocations(players);
-        }
-
+        mPlugin.updateLocations(players);
     }
 }
