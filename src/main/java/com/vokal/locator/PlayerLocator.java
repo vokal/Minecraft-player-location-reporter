@@ -70,7 +70,6 @@ public final class PlayerLocator extends JavaPlugin {
 
         getCommand("gob").setExecutor(new GobCommandExecutor(this));
         getCommand("fart").setExecutor(new FartCommandExecutor(this));
-        getCommand("peep").setExecutor(new PeepCommandExecutor(this));
         getCommand("locations").setExecutor(new LocationsCommandExecutor(this));
 
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
