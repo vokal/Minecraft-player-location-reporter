@@ -51,6 +51,12 @@ public class LocationsCommandExecutor implements CommandExecutor {
             }
         }
 
+        try {
+            mPlugin.resetSocket();
+        } catch (Exception e) {
+            mPlugin.getLogger().warning(e.toString());
+        }
+
         broadcastUpdated(aSender);
         mPlugin.saveConfig();
 

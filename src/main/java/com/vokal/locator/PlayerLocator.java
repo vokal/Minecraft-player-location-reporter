@@ -53,6 +53,14 @@ public final class PlayerLocator extends JavaPlugin {
         }
     };
 
+    public void resetSocket() throws Exception {
+        String host = getConfig().getString("server");
+        int port = getConfig().getInt("port");
+
+        mSocket = new SocketIO("http://" + host + ":" + Integer.toString(port));
+        mSocket.connect(new SocketCallback(this));
+    }
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -63,13 +71,12 @@ public final class PlayerLocator extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PlayerLoginListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+        // getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
 
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, mUpdateLocations, 600L, 600L);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, mUpdateLocations, 20L, 20L);
 
         try {
-            mSocket = new SocketIO("http://localhost:5000");
-            mSocket.connect(new SocketCallback(this));
+            resetSocket();
 
             // This line is cached until the connection is establisched.
             mSocket.send("Hello!");
