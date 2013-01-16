@@ -72,6 +72,7 @@ public final class PlayerLocator extends JavaPlugin {
         getCommand("fart").setExecutor(new FartCommandExecutor(this));
         getCommand("locations").setExecutor(new LocationsCommandExecutor(this));
 
+        getServer().getPluginManager().registerEvents(new PlayerLoginListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, mUpdateLocations, 600L, 600L);
