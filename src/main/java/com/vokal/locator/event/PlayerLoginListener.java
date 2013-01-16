@@ -5,6 +5,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.vokal.locator.PlayerLocator;
 
 public class PlayerLoginListener implements Listener {
@@ -16,9 +19,13 @@ public class PlayerLoginListener implements Listener {
 
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent aEvent) {
-        Player[] players = new Player[mPlugin.getServer().getOnlinePlayers().length + 1];
-        players[players.length] = aEvent.getPlayer();
+        Player[] players = mPlugin.getServer().getOnlinePlayers();
 
-        mPlugin.updateLocations(players);
+        // Remove the player from the array and send the updated list
+        ArrayList<Player> totalplayers = 
+            new ArrayList<Player>(Arrays.asList(players));
+        totalplayers.add(aEvent.getPlayer());
+
+        mPlugin.updateLocations(totalplayers.toArray(new Player[totalplayers.size()]));
     }
 }

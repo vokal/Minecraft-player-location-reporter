@@ -18,6 +18,8 @@ public final class PlayerLocator extends JavaPlugin {
     public void updateLocations(Player[] aPlayers) {
         final JSONArray location_list = new JSONArray();
         for (Player player : aPlayers) {
+            getLogger().info("Reporting " + player.getDisplayName());
+
             JSONObject loc = new JSONObject();
             loc.put("player", player.getDisplayName());
             loc.put("x", player.getLocation().getX());
