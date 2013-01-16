@@ -24,7 +24,7 @@ import com.vokal.locator.point.*;
 public final class PlayerLocator extends JavaPlugin {
     private SocketIO mSocket;
 
-    private PointList<DeathPoint> mDeathPoints = new PointList<DeathPoint>(1);
+    private PointList<DeathPoint> mDeathPoints = new PointList<DeathPoint>(15);
 
     public void updateLocations(Player[] aPlayers) {
         final JSONArray location_list = new JSONArray();
