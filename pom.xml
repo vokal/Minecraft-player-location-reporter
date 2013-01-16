@@ -58,6 +58,11 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/socketio.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20090211</version>
+        </dependency>
         <!-- Dependency information --> 
         <dependency>
             <groupId>org.bukkit</groupId>
