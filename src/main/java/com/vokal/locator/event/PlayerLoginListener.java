@@ -17,7 +17,7 @@ public class PlayerLoginListener implements Listener {
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent aEvent) {
         Player[] players = new Player[mPlugin.getServer().getOnlinePlayers().length + 1];
-        players[players.length - 1] = aEvent.getPlayer();
+        players[players.length] = aEvent.getPlayer();
 
         mPlugin.updateLocations(players);
     }
