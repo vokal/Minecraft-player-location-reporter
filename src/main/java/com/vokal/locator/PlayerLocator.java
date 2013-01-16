@@ -11,15 +11,22 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.net.URI;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
+import io.socket.*;
+
 import com.vokal.locator.command.*;
 import com.vokal.locator.event.*;
 
 public final class PlayerLocator extends JavaPlugin {
+    private SocketIO mSocket;
+
     public void updateLocations(Player[] aPlayers) {
         final JSONArray location_list = new JSONArray();
-        for (Player player : aPlayers) {
-            getLogger().info("Reporting " + player.getDisplayName());
 
+        for (Player player : aPlayers) {
             JSONObject loc = new JSONObject();
             loc.put("player", player.getDisplayName());
             loc.put("x", player.getLocation().getX());
@@ -29,28 +36,8 @@ public final class PlayerLocator extends JavaPlugin {
             
             location_list.add(loc);
         }
-        
-        new Thread() {
-            public void run() {
-                String host = getConfig().getString("server");
-                int port = getConfig().getInt("port");
 
-                try {
-                    HttpClient client = new DefaultHttpClient();
-                    HttpPost httpPost = 
-                        new HttpPost("http://" + host + ":" + Integer.toString(port) + "/update");
-
-                    httpPost.setEntity(new StringEntity(location_list.toString()));
-                    httpPost.setHeader("Accept", "application/json");
-                    httpPost.setHeader("Content-type", "application/json; charset=UTF-8");
-                    
-                    client.execute(httpPost);
-                } catch (Exception e) {
-                    // Log
-                    getLogger().warning(e.toString());
-                }
-            }
-        }.start();
+        mSocket.emit("update", location_list);
     }
 
     private Runnable mUpdateLocations = new Runnable() {
@@ -76,8 +63,21 @@ public final class PlayerLocator extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PlayerLoginListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, mUpdateLocations, 600L, 600L);
+
+        try {
+            mSocket = new SocketIO("http://localhost:5000");
+            mSocket.connect(new SocketCallback(this));
+
+            // This line is cached until the connection is establisched.
+            mSocket.send("Hello!");
+        } catch (Exception e) {
+            getLogger().warning(e.toString());
+        }
+
+        Logger.getLogger("io.socket").setLevel(Level.WARNING);
     }
 
     @Override
