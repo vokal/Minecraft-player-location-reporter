@@ -23,6 +23,8 @@ public class PointList<T extends Point> {
 
     public void add(T aPoint) {
         mPoints.add(aPoint);
+        System.out.println("Points length: " 
+                + Integer.toString(mPoints.size()));
     }
 
     /*

@@ -23,11 +23,13 @@ import com.vokal.locator.point.*;
 
 public final class PlayerLocator extends JavaPlugin {
     private SocketIO mSocket;
+    private SocketCallback mSocketCallback;
 
     private PointList<DeathPoint> mDeathPoints = new PointList<DeathPoint>(15);
 
     public void updateLocations(Player[] aPlayers) {
-        final JSONArray location_list = new JSONArray();
+        JSONArray location_list = new JSONArray();
+        long timestamp = System.currentTimeMillis() / 1000;
 
         try {
             for (Player player : aPlayers) {
@@ -37,6 +39,7 @@ public final class PlayerLocator extends JavaPlugin {
                 loc.put("y", player.getLocation().getY());
                 loc.put("z", player.getLocation().getZ());
                 loc.put("realm", player.getWorld().getEnvironment().toString());
+                loc.put("timestamp", timestamp);
                 
                 location_list.put(loc);
             }
@@ -65,7 +68,7 @@ public final class PlayerLocator extends JavaPlugin {
         int port = getConfig().getInt("port");
 
         mSocket = new SocketIO("http://" + host + ":" + Integer.toString(port));
-        mSocket.connect(new SocketCallback(this));
+        mSocket.connect(mSocketCallback);
     }
 
     public void addDeathPoint(DeathPoint aPoint) {
@@ -88,6 +91,8 @@ public final class PlayerLocator extends JavaPlugin {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, mUpdateLocations, 10L, 10L);
 
         try {
+            mSocketCallback = new SocketCallback(this);
+
             resetSocket();
 
             // This line is cached until the connection is establisched.

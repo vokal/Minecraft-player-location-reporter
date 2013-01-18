@@ -49,6 +49,7 @@ public class DeathPoint extends Point {
         result.put("z", mZ);
         result.put("player", mPlayer);
         result.put("realm", mRealm);
+        result.put("timestamp", getTimestamp());
 
         return result;
     }

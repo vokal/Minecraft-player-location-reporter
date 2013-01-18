@@ -28,6 +28,12 @@ public class SocketCallback implements IOCallback {
     public void onError(SocketIOException socketIOException) {
         mPlugin.getLogger().info("An error occurred");
         socketIOException.printStackTrace();
+
+        try {
+            mPlugin.resetSocket();
+        } catch (Exception e) {
+            mPlugin.getLogger().warning(e.toString());
+        }
     }
 
     @Override
