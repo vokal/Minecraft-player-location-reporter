@@ -59,22 +59,13 @@ public final class PlayerLocator extends JavaPlugin {
                 payload.put("payload", aMessage);
                 mSocket.send(payload.toString());
             } else {
-                mSocket.connectBlocking();
+                resetSocket();
             }
         } catch (Exception e) {
             e.printStackTrace();
             getLogger().warning(e.toString());
         }
     }
-
-    private Runnable mUpdateLocations = new Runnable() {
-        @Override 
-        public void run() {
-            Player[] players = getServer().getOnlinePlayers();
-        
-            PlayerLocator.this.updateLocations(players);
-        }
-    };
 
     public void resetSocket() {
         try {
@@ -106,8 +97,6 @@ public final class PlayerLocator extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerLoginListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerChatListener(this), this);
-
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, mUpdateLocations, 10L, 10L);
 
         resetSocket();
     }
