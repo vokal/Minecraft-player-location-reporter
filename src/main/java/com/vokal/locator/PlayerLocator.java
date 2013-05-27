@@ -10,20 +10,17 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import org.java_websocket.WebSocketImpl;
+
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import io.socket.*;
 
 import com.vokal.locator.command.*;
 import com.vokal.locator.event.*;
 import com.vokal.locator.point.*;
 
 public final class PlayerLocator extends JavaPlugin {
-    private SocketIO mSocket;
-    private SocketCallback mSocketCallback;
+    private SocketClient mSocket;
 
     private PointList<DeathPoint> mDeathPoints = new PointList<DeathPoint>(15);
 
@@ -48,8 +45,24 @@ public final class PlayerLocator extends JavaPlugin {
             payload.put("players", location_list);
             payload.put("death_points", mDeathPoints.getSerializedPoints());
 
-            mSocket.emit("update", payload);
+            emitMessage("update", payload);
         } catch (JSONException e) {
+            getLogger().warning(e.toString());
+        }
+    }
+
+    public synchronized void emitMessage(String aKey, JSONObject aMessage) {
+        try {
+            if (mSocket.isConnected()) {
+                JSONObject payload = new JSONObject();
+                payload.put("type", "position-update");
+                payload.put("payload", aMessage);
+                mSocket.send(payload.toString());
+            } else {
+                mSocket.connectBlocking();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             getLogger().warning(e.toString());
         }
     }
@@ -63,12 +76,18 @@ public final class PlayerLocator extends JavaPlugin {
         }
     };
 
-    public void resetSocket() throws Exception {
-        String host = getConfig().getString("server");
-        int port = getConfig().getInt("port");
+    public void resetSocket() {
+        try {
+            String host = getConfig().getString("server");
+            int port = getConfig().getInt("port");
 
-        mSocket = new SocketIO("http://" + host + ":" + Integer.toString(port));
-        mSocket.connect(mSocketCallback);
+            String uri = "ws://" + host + ":" + Integer.toString(port);
+            mSocket = new SocketClient(this, uri);
+            mSocket.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+            getLogger().warning(e.toString());
+        }
     }
 
     public void addDeathPoint(DeathPoint aPoint) {
@@ -86,22 +105,11 @@ public final class PlayerLocator extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerLoginListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
-        // getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerChatListener(this), this);
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, mUpdateLocations, 10L, 10L);
 
-        try {
-            mSocketCallback = new SocketCallback(this);
-
-            resetSocket();
-
-            // This line is cached until the connection is establisched.
-            mSocket.send("Hello!");
-        } catch (Exception e) {
-            getLogger().warning(e.toString());
-        }
-
-        Logger.getLogger("io.socket").setLevel(Level.WARNING);
+        resetSocket();
     }
 
     @Override
