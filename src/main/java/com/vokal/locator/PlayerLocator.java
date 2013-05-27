@@ -24,6 +24,23 @@ public final class PlayerLocator extends JavaPlugin {
 
     private PointList<DeathPoint> mDeathPoints = new PointList<DeathPoint>(15);
 
+    private Runnable mCheckSocketHealth = new Runnable() {
+        @Override 
+        public void run() {
+            try {
+                if (!mSocket.isConnected()) {
+                    getServer().getScheduler().cancelAllTasks();
+                    resetSocket();
+                    getServer().getScheduler().scheduleSyncRepeatingTask(
+                            PlayerLocator.this, mCheckSocketHealth, 600L, 10L);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                getLogger().warning(e.toString());
+            }
+        }
+    };
+
     public void updateLocations(Player[] aPlayers) {
         JSONArray location_list = new JSONArray();
         long timestamp = System.currentTimeMillis() / 1000;
@@ -97,6 +114,9 @@ public final class PlayerLocator extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerLoginListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerChatListener(this), this);
+
+        getServer().getScheduler().scheduleSyncRepeatingTask(
+                this, mCheckSocketHealth, 600L, 10L);
 
         resetSocket();
     }

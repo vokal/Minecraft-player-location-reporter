@@ -15,6 +15,8 @@ public class SocketClient extends WebSocketClient {
     private boolean mConnected = false;
     private PlayerLocator mPlugin;
 
+    private int mTaskId = -1;
+
     private Runnable mUpdateLocations = new Runnable() {
         @Override 
         public void run() {
@@ -57,7 +59,9 @@ public class SocketClient extends WebSocketClient {
         mPlugin.getLogger().info("Connection terminated: " + aReason);
         mConnected = false;
 
-        mPlugin.getServer().getScheduler().cancelAllTasks();
+        if (mTaskId > -1) {
+            mPlugin.getServer().getScheduler().cancelTask(mTaskId);
+        }
     }
 
     @Override
@@ -65,7 +69,8 @@ public class SocketClient extends WebSocketClient {
         mPlugin.getLogger().info("Connection established");
         mConnected = true;
 
-        mPlugin.getServer().getScheduler().scheduleSyncRepeatingTask(mPlugin, mUpdateLocations, 10L, 10L);
+        mTaskId = mPlugin.getServer().getScheduler().scheduleSyncRepeatingTask(
+                mPlugin, mUpdateLocations, 10L, 10L);
     }
 
     public boolean isConnected() {
